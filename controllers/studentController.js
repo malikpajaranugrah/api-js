@@ -47,34 +47,39 @@ router.put('/:nim', (req, res) => {
   );
 });
 
-// DELETE /mahasiswa/:nim
-router.delete('/:nim', (req, res) => {
-  const mahasiswaNim = req.params.nim;
-  db.query('DELETE FROM mahasiswa WHERE nim = ?', [mahasiswaNim], (error) => {
-    if (error) {
-      console.error('Error deleting mahasiswa:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    } else {
-      res.json("Deleting mahasiswa successfully");
+router.post('/', (req, res) => {
+    const newMahasiswa = req.body;
+
+    // Pastikan req.body berisi data yang sesuai
+    if (!newMahasiswa || typeof newMahasiswa !== 'object') {
+        res.status(400).json({ message: 'Invalid request body' });
+        return;
     }
-  });
+
+    db.query("INSERT INTO mahasiswa SET ?", newMahasiswa, (error, results) => {
+        if (error) {
+            console.error(`Error creating mahasiswa: ${error}`);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.status(200).json({ message: 'Mahasiswa created successfully'});
+        }
+    });
 });
 
-// POST /mahasiswa
-router.post('/', (req, res) => {
-  const {nim, nama, gender, prodi, alamat } = req.body;
-  db.query(
-    'INSERT INTO mahasiswa (nim, nama, gender, prodi, alamat) VALUES (?, ?, ?, ?, ?)',
-    [nim, nama, gender, prodi, alamat],
-    (error) => {
-      if (error) {
-        console.error('Error inserting mahasiswa:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-      } else {
-        res.json("Inserting mahasiswa successfully");
-      }
-    }
-  );
+router.delete('/:nim', (req, res) => {
+    const mahasiswa = req.body;
+    const nama = mahasiswa.nama
+    const mahasiswaDeleteNIM = req.params.nim;
+    db.query('DELETE FROM mahasiswa WHERE nim = ?', [mahasiswaDeleteNIM], (error, results) => {
+        if (error) {
+            console.error("Error deleting mahasiswa", error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else if (results.affectedRows === 0) {
+            res.status(404).json({ message: 'Mahasiswa not found' });
+        } else {
+            res.status(200).json({ message: `Mahasiswa ${nama}deleted successfully` });
+        }
+    });
 });
 
 module.exports = router;
