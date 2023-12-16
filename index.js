@@ -1,14 +1,13 @@
-const mahasiswaNim = 20202022; // Replace with the actual nim
-
-// PUT Request to update data
+const { response } = require("express");
+const mahasiswaNim = 1102020; // Replace with the actual nim
 const updatedData = {
-  nama: 'haidar',
+  nama: 'Ronaldo',
   gender: 'L',
   prodi: 'TE',
-  alamat: 'Jl. Cibolang Kaler'
+  alamat: 'Jl. Cibolang Kidul'
 };
 
-fetch(`http://localhost:3000/mahasiswa/${mahasiswaNim}`, {
+fetch(`http://localhost:4000/mahasiswa/${mahasiswaNim}`, {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -16,42 +15,42 @@ fetch(`http://localhost:3000/mahasiswa/${mahasiswaNim}`, {
   body: JSON.stringify(updatedData)
 })
   .then(response => response.json())
-  .then(data => console.log('Update Result:', data))
-  .catch(error => console.error('Update Error:', error));
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
 
-
-// DELETE Request to delete data
-const nimToDelete = '111111';
-
-fetch(`http://localhost:3000/mahasiswa/${nimToDelete}`, {
-  method: 'DELETE',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-  .then(response => response.json())
-  .then(data => console.log('Delete Result:', data))
-  .catch(error => console.error('Delete Error:', error));
-
-
-const newData = {
-  nim: '222222',  // Pastikan nim dikirimkan sebagai string dengan tanda kutip
-  nama: 'fikry',
-  gender: 'P',
+const addData = {
+  nim: '1102022',
+  nama: 'Malik',
+  gender: 'L',
   prodi: 'TI',
-  alamat: 'Jl. Ciogong'
-};
+  alamat: 'Jl. Cisantri'
+}
 
-fetch('http://localhost:3000/mahasiswa', {
+fetch(`http://localhost:4000/mahasiswa/`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify(newData)
+  body: JSON.stringify(addData)
 })
-  .then(response => {
-    console.log('Response Status:', response.status);
-    return response.json();
-  })
-  .then(data => console.log('Post Result:', data))
-  .catch(error => console.error('Post Error:', error));
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error', error));
+
+const mahasiswaNIM = '1102022'; 
+fetch(`http://localhost:4000/mahasiswa/${mahasiswaNIM}`, {
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    })
+    .then(data => console.log('Response Data:', data))
+    .catch(error => {
+        console.error('Error:', error)
+    });
+ 
